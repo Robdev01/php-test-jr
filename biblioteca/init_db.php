@@ -1,44 +1,43 @@
 <?php
-// Inclui o arquivo de conexão com o banco de dados
-include_once 'app/database/BancoDeDados.php';  // Caminho correto para o arquivo Database.php
-
+// Include the database connection file
+include_once 'app/database/Database.php';  
 try {
-    // Cria uma instância de conexão com o banco de dados
-    $database = new BancoDeDados();
+    // Create a database connection instance
+    $database = new Database();
     $conn = $database->getConnection();
 
-    // Criação das tabelas
+    // Create tables
     $sql = "
-        CREATE TABLE IF NOT EXISTS livros (
+        CREATE TABLE IF NOT EXISTS books (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            titulo TEXT NOT NULL,
-            autor TEXT NOT NULL,
+            title TEXT NOT NULL,
+            author TEXT NOT NULL,
             isbn TEXT NOT NULL UNIQUE,
-            esta_emprestado BOOLEAN DEFAULT 0
+            is_borrowed BOOLEAN DEFAULT 0
         );
 
-        CREATE TABLE IF NOT EXISTS usuarios (
+        CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            nome TEXT NOT NULL,
-            tipo TEXT NOT NULL  -- Mudado de ENUM para TEXT
+            name TEXT NOT NULL,
+            type TEXT NOT NULL  -- Changed from ENUM to TEXT
         );
 
-        CREATE TABLE IF NOT EXISTS emprestimos (
+        CREATE TABLE IF NOT EXISTS loans (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            livro_id INTEGER NOT NULL,
-            usuario_id INTEGER NOT NULL,
-            data_emprestimo DATE NOT NULL,
-            data_devolucao DATE,
-            FOREIGN KEY (livro_id) REFERENCES livros(id),
-            FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+            book_id INTEGER NOT NULL,
+            user_id INTEGER NOT NULL,
+            loan_date DATE NOT NULL,
+            return_date DATE,
+            FOREIGN KEY (book_id) REFERENCES books(id),
+            FOREIGN KEY (user_id) REFERENCES users(id)
         );
     ";
 
-    // Executa as queries para criar as tabelas
+    // Execute the queries to create the tables
     $conn->exec($sql);
-    echo "Banco de dados e tabelas criados com sucesso.";
+    echo "Database and tables created successfully.";
 } catch (PDOException $exception) {
-    echo "Erro ao criar o banco de dados ou as tabelas: " . $exception->getMessage();
+    echo "Error creating database or tables: " . $exception->getMessage();
 }
 
 ?>

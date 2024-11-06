@@ -1,4 +1,7 @@
+
 <?php
+require_once __DIR__ . '/../models/Livro.php';
+
 class LivroController
 {
     private BancoDeDados $db;
